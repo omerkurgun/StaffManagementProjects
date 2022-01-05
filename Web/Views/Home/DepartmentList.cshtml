@@ -1,0 +1,366 @@
+﻿@model IEnumerable<DLL.department>
+
+@{
+    ViewBag.Title = "Department List - Department";
+    ViewBag.Description = "Department List";
+    Layout = "~/Views/_Layout.cshtml";
+    ViewBag.selectedPage = 2;
+}
+
+<div class="row">
+
+    <div class="col-xs-12">
+
+        <div class="box">
+
+            <div class="box-header">
+                <h3 class="box-title">
+                    Department List
+                    <button class="btn btn-sm btn-social btn-primary" data-toggle="modal" data-target="#mdl-ekle">
+                        <i class="fa fa-user-secret"></i>Department Add
+                    </button>
+                </h3>
+            </div>
+
+            <div class="box-body">
+
+                <table id="DepartmentList" class="table table-bordered table-striped">
+
+                    <thead>
+                        <tr>
+                            <th>Id <i class="fa fa-sort-numeric-asc"></i></th>
+                            <th>Department Name <i class="fa fa-sort-numeric-asc"></i></th>
+                            <th>Operations</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.id)</td>
+                                <td>@Html.DisplayFor(modelItem => item.department_name)</td>
+                                <td>
+                                    <button class="btn btn-default" data-toggle="modal" data-target="#mdl-guncelle" data-id="@(item.id)" data-department_name="@(item.department_name)"><i class="fa fa-edit"></i> Edit</button>
+                                    <button class="btn btn-default" data-toggle="modal" data-target="#mdl-sil" data-id="@(item.id)" data-department_name="@(item.department_name)"><i class="fa fa-close"></i> Delete</button>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="modal fade" id="mdl-sil">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="col-xs-12">
+                    <h3 class="modal-title">Delete department with number <span id="silId" style="font-weight:bold"></span>?</h3>
+                </div>
+            </div>
+            <form id="DepartmentDelete">
+                <div class="modal-body">
+                    @Html.AntiForgeryToken()
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-user-secret"></i></span>
+                        <input type="text" name="departmentName" id="departmentName" class="form-control" placeholder="Department Name" disabled>
+                    </div>
+                    <div class="col-xs-12 sonucs">
+
+                    </div>
+                    <br />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-primary" id="btnSil">Yes Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="mdl-ekle">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Add New Department</h4>
+            </div>
+            <form id="DepartmentAdd">
+                <div class="modal-body">
+                    @Html.AntiForgeryToken()
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-user-secret"></i></span>
+                        <input type="text" name="eklDepartmentName" id="eklDepartmentName" class="form-control" placeholder="Department Name">
+                    </div>
+                    <div class="col-xs-12 sonuce">
+
+                    </div>
+                    <br />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="btnEkle">Department Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="mdl-guncelle">
+    <div class="modal-dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title"><span id="txtid"></span> with number Department Updating</h4>
+                </div>
+                <form id="DepartmentUpdate">
+                    <div class="modal-body">
+                        @Html.AntiForgeryToken()
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-user-secret"></i></span>
+                            <input type="text" name="gncDepartmentName" id="gncDepartmentName" class="form-control" placeholder="Department Name">
+                        </div>
+                        <div class="col-xs-12 sonucg">
+
+                        </div>
+                        <br />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="btnGuncelle">Department Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Footer
+{
+    <script src="~/Contents/Js/jquery.dataTables.min.js"></script>
+    <script src="~/Contents/Js/dataTables.bootstrap.min.js"></script>
+    <script src="~/Contents/Js/jquery.slimscroll.min.js"></script>
+    <script src="~/Contents/Js/fastclick.js"></script>
+    <script src="~/Contents/Js/jquery.validate.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(function () {
+                $('#DepartmentList').DataTable({ "order": [[0, "desc"]], "searching": false });
+            });
+            $('#mdl-sil').on('show.bs.modal', function (e) {
+                $(".sonucs").html(null);
+
+                var button = $(e.relatedTarget);
+                var ids = button.data('id');
+                var adis = button.data('department_name');
+                
+                var modal = $(this);
+                modal.find('#silId').text(ids);
+                modal.find('#departmentName').val(adis);
+            });
+
+            $("#btnSil").click(function () {
+                $("#btnSil").attr("disabled", "disabled");
+                $("#btnSil").addClass("disabled");
+                $(".sonucs").html("<i class='fa fa-spinner fa-spin'></i> Deleting");
+                $.ajax({
+                    url: "department-delete",
+                    type: "POST",
+                    data: {
+                        __RequestVerificationToken: $("#DepartmentDelete").find('input[name="__RequestVerificationToken"]').val(),
+                        DepartmentId: $('#silId').text()
+                    },
+                    contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                    dataType: "JSON",
+                    success: function (success) {
+                        if (success == 1) {
+                            $(".sonucs").html("<i class='fa fa-check'></i> " + $('#silId').text() + " Number Record Deleted");
+                            setTimeout(function () { location.reload() }, 1000);
+                        }
+                        else if (success == 2) {
+                            $(".sonucs").html("<i class='fa fa-close'></i> " + $('#silId').text() + " Number Record Not Found");
+                        }
+                        else if (success == 3) {
+                            $(".sonucs").html("<i class='fa fa-thumbs-down'></i> " + $('#silId').text() + " Not Number!");
+                        }
+                        else if (success == 4) {
+                            $(".sonucs").html("<i class='fa fa-users'></i> " + $('#silId').text() + " With Number Department Used in Staff");
+                        }
+                        else {
+                            $(".sonucs").html("<i class='fa fa-close'></i> Error!");
+                        }
+                        $("#btnSil").removeAttr("disabled");
+                        $("#btnSil").removeClass("disabled");
+                    },
+                    error: function (error) {
+                        $("#btnSil").removeAttr("disabled");
+                        $("#btnSil").removeClass("disabled");
+                        $(".sonucs").html("Error!");
+                    }
+                });
+            });
+
+            $("#DepartmentAdd").validate({
+                rules: {
+                    eklDepartmentName: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 150
+                    }
+                },
+                messages: {
+                    eklDepartmentName: {
+                        required: "Department Name Field Required!",
+                        minlength: "Minimum 3 Character!",
+                        maxlength: "Maximum 150 Character!"
+                    }
+                },
+                errorElement: "label",
+                errorPlacement: function (error, element) {
+                    if (element.parent('.input-group').length) {
+                        error.insertAfter(element.parent());
+                    }
+                    else {
+                        error.insertAfter(element);
+                    }
+                },
+                submitHandler: function () {
+                    $("#btnEkle").attr("disabled", "disabled");
+                    $("#btnEkle").addClass("disabled");
+                    $(".sonuce").html("<i class='fa fa-spinner fa-spin'></i> Adding");
+                    $.ajax({
+                        url: "department-operation",
+                        type: "POST",
+                        data: {
+                            __RequestVerificationToken: $("#DepartmentAdd").find('input[name="__RequestVerificationToken"]').val(),
+                            eklDepartmentName: $('#eklDepartmentName').val(),
+                            operationName: 'INSERT'
+                        },
+                        contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                        dataType: "JSON",
+                        success: function (success) {
+                            if (success == 1) {
+                                $(".sonuce").html("<i class='fa fa-check'></i> Department Added Successfull");
+                                setTimeout(function () { location.reload() }, 1000);
+                            }
+                            else if (success == 2) {
+                                $(".sonuce").html("<i class='fa fa-close'></i> Please enter to fields!");
+                            }
+                            else {
+                                $(".sonuce").html("<i class='fa fa-close'></i> Error!");
+                            }
+                            $("#btnEkle").removeAttr("disabled");
+                            $("#btnEkle").removeClass("disabled");
+                        },
+                        error: function (error) {
+                            $("#btnEkle").removeAttr("disabled");
+                            $("#btnEkle").removeClass("disabled");
+                            $(".sonuce").html("Error!");
+                        }
+                    });
+                }
+            });
+
+            $('#mdl-guncelle').on('show.bs.modal', function (e) {
+                $(".sonucg").html(null);
+                var button = $(e.relatedTarget);
+                var idg = button.data('id');
+                var adig = button.data('department_name');
+                var modal = $(this);
+                modal.find('#txtid').text(idg);
+                modal.find('#gncDepartmentName').val(adig);
+
+            });
+            $("#mdl-guncelle").on("hide.bs.modal", function () {
+                $(".sonucg").html(null);
+            });
+
+            $("#DepartmentUpdate").validate({
+                rules: {
+                    gncDepartmentName: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 150
+                    }
+                },
+                messages: {
+                    gncDepartmentName: {
+                        required: "Department Name Field Required!",
+                        minlength: "Minimum 3 Character!",
+                        maxlength: "Maximum 150 Character!"
+                    }
+                },
+                errorElement: "label",
+                errorPlacement: function (error, element) {
+                    if (element.parent('.input-group').length) {
+                        error.insertAfter(element.parent());
+                    }
+                    else {
+                        error.insertAfter(element);
+                    }
+                },
+                submitHandler: function () {
+                    $("#btnGuncelle").attr("disabled", "disabled");
+                    $("#btnGuncelle").addClass("disabled");
+                    $(".sonucg").html("<i class='fa fa-spinner fa-spin'></i> Updating");
+                    $.ajax({
+                        url: "department-operation",
+                        type: "POST",
+                        data: {
+                            __RequestVerificationToken: $("#DepartmentAdd").find('input[name="__RequestVerificationToken"]').val(),
+                            gncDepartmentId: $('#txtid').text(),
+                            gncDepartmentName: $('#gncDepartmentName').val(),
+                            operationName: 'UPDATE'
+                        },
+                        contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                        dataType: "JSON",
+                        success: function (success) {
+                            if (success == 1) {
+                                $(".sonucg").html("<i class='fa fa-check'></i> Department Updated Successfull");
+                                setTimeout(function () { location.reload() }, 1000);
+                            }
+                            else if (success == 2) {
+                                $(".sonucg").html("<i class='fa fa-close'></i> Please enter to fields!");
+                            }
+                            else if (success == 3) {
+                                $(".sonucg").html($('#txtid').text() + " Number record not found!");
+                            }
+                            else if (success == 4) {
+                                $(".sonucg").html($('#txtid').text() + " Not number!");
+                            }
+                            else {
+                                $(".sonucg").html("<i class='fa fa-close'></i> Error!");
+                            }
+                            $("#btnGuncelle").removeAttr("disabled");
+                            $("#btnGuncelle").removeClass("disabled");
+                        },
+                        error: function (error) {
+                            $("#btnGuncelle").removeAttr("disabled");
+                            $("#btnGuncelle").removeClass("disabled");
+                            $(".sonucg").html("Error!");
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

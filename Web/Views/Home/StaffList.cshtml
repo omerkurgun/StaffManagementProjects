@@ -1,0 +1,1077 @@
+﻿@model IEnumerable<DLL.staff>
+
+@{
+    ViewBag.Title = "Staff List - Department";
+    ViewBag.Description = "Staff List";
+    Layout = "~/Views/_Layout.cshtml";
+    ViewBag.selectedPage = 3;
+}
+
+<div class="row">
+
+    <div class="col-xs-12">
+
+        <div class="box">
+
+            <div class="box-header">
+                <h3 class="box-title">
+                    Staff List
+                    <button class="btn btn-sm btn-social btn-primary" data-toggle="modal" data-target="#mdl-ekle">
+                        <i class="fa fa-users"></i>Staff Add
+                    </button>
+                </h3>
+                <form id="StaffSearch" style="margin-top: 15px">
+                    @Html.AntiForgeryToken()
+                </form>
+                <div class="input-group">
+                    <input autocomplete="new-password" type="text" name="StaffSearchInput" id="StaffSearchInput" class="form-control" placeholder="(Name & Surname, Identity Number, Mission...) Press Enter">
+                    <span class="input-group-addon" id="searchBTN">
+                        <span style="cursor: pointer"  id="StaffSearchBtn"><i class="fa fa-search"></i></span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="box-body">
+
+                <table id="StaffList" class="table table-bordered table-striped">
+
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Name & Surname</th>
+                            <th>Country Name</th>
+                            <th>City Name</th>
+                            <th>Department Name</th>
+                            <th>Mission</th>
+                            <th>Operations</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="staffTable">
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.id</td>
+                                <td>@item.name_surname</td>
+                                <td>@item.country.country_name</td>
+                                <td>@item.city.city_name</td>
+                                <td>@item.department.department_name</td>
+                                <td>@item.mission</td>
+                                <td>
+                                    <button class="btn btn-default" data-toggle="modal" data-target="#mdl-guncelle" data-birth_dateStamp="@(item.birthDateTimestamp)" data-name_surname="@(item.name_surname)" data-nationality="@(item.nationality)" data-identity_number="@(item.identity_number)" data-department_id="@(item.department_id)" data-mission="@(item.mission)" data-country_id="@(item.country_id)" data-city_id="@(item.city_id)" data-last_graduated_school="@(item.last_graduated_school)" data-mobile_phone="@(item.mobile_phone)" data-email="@(item.email)" data-birth_place="@(item.birth_place)" data-home_phone="@(item.home_phone)" data-gender="@(item.gender)" data-home_address="@(item.home_address)" data-blood_type="@(item.blood_type)" data-id="@(item.id)" data-image_path="@(item.image_path)"><i class="fa fa-edit"></i> Edit</button>
+                                    <button class="btn btn-default" data-toggle="modal" data-target="#mdl-sil" data-id="@(item.id)" data-staff_name="@(item.name_surname)"><i class="fa fa-close"></i> Delete</button>                                    
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="modal fade" id="mdl-sil">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="col-xs-12">
+                    <h3 class="modal-title">Delete staff with number <span id="silId" style="font-weight:bold"></span>?</h3>
+                </div>
+            </div>
+            <form id="StaffDelete">
+                <div class="modal-body">
+                    @Html.AntiForgeryToken()
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-users"></i></span>
+                        <input type="text" name="staffName" id="staffName" class="form-control" placeholder="Staff Name" disabled>
+                    </div>
+                    <div class="col-xs-12 sonucs">
+
+                    </div>
+                    <br />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-primary" id="btnSil">Yes Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="mdl-ekle">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Add New Staff</h4>
+            </div>
+            <form id="StaffAdd">
+                <div class="modal-body">
+                    @Html.AntiForgeryToken()
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="input-group" style="margin-bottom: 10px">
+                                <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                <input type="text" name="eklname_surname" id="eklname_surname" class="form-control" placeholder="Name & Surname">
+                            </div>
+                            <div class="input-group" style="margin-bottom: 10px">
+                                <span class="input-group-addon"><i class="fa fa-globe"></i></span>
+                                <input type="text" name="eklnationality" id="eklnationality" class="form-control" placeholder="Nationality">
+                            </div>
+                            <div class="input-group" style="margin-bottom: 10px">
+                                <span class="input-group-addon"><i class="fa fa-id-card-o"></i></span>
+                                <input type="text" name="eklidentity_number" id="eklidentity_number" class="form-control" placeholder="Identity Number">
+                            </div>
+                            <div class="input-group" style="margin-bottom: 10px">
+                                <span class="input-group-addon"><i class="fa fa-user-secret"></i></span>
+                                @Html.DropDownList("ekldepartment_id", (IEnumerable<SelectListItem>)ViewData["Departments"], "Select Department;", new { @class = "form-control" })
+                            </div>
+                            <div class="input-group" style="margin-bottom: 10px">
+                                <span class="input-group-addon"><i class="fa fa-tasks"></i></span>
+                                <input type="text" name="eklmission" id="eklmission" class="form-control" placeholder="Mission">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <input accept="image/jpeg" type="file" name="eklimage_path" id="eklimage_path" onchange="openFileInsert(event)" class="form-control">
+                            <img for="eklimage_path" id="outputInsert" style="cursor: pointer; margin-top: 10px; height: 167px; width: 100%; border: 1px solid #d2d6de; ">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="input-group" style="margin-bottom: 10px">
+                                <span class="input-group-addon"><i class="fa fa-globe"></i></span>
+                                @Html.DropDownList("eklcountry_id", (IEnumerable<SelectListItem>)ViewData["Countryies"], "Select Country;", new { @class = "form-control" })
+                            </div>
+                            <div class="input-group" style="margin-bottom:10px">
+                                <span class="input-group-addon"><i class="fa fa-building"></i></span>
+                                <select id="eklcity_id" name="eklcity_id" class="form-control">
+                                    <option value="">Please Select Country</option>
+                                </select>
+                            </div>
+                            <div class="input-group" style="margin-bottom: 10px">
+                                <span class="input-group-addon"><i class="fa fa-heart"></i></span>
+                                <select class="form-control" name="eklgender" id="eklgender">
+                                    <option value="">Select Gender;</option>
+                                    <option value="true">Men</option>
+                                    <option value="false">Women</option>
+                                </select>
+                            </div>
+                            <div class="input-group" style="margin-bottom: 10px">
+                                <span class="input-group-addon"><i class="fa fa-birthday-cake"></i></span>
+                                <input type="date" name="eklbirth_date" id="eklbirth_date" class="form-control" placeholder="Birth Date">
+                            </div>
+                            <div class="input-group" style="margin-bottom: 10px">
+                                <span class="input-group-addon"><i class="fa fa-map-marker"></i></span>
+                                <input type="text" name="eklbirth_place" id="eklbirth_place" class="form-control" placeholder="Birth Place">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group" style="margin-bottom: 10px">
+                                <span class="input-group-addon"><i class="fa fa-tint"></i></span>
+                                <input type="text" name="eklblood_type" id="eklblood_type" class="form-control" placeholder="Blood Type">
+                            </div>
+                            <div class="input-group" style="margin-bottom: 10px">
+                                <span class="input-group-addon"><i class="fa fa-graduation-cap"></i></span>
+                                <input type="text" name="ekllast_graduated_school" id="ekllast_graduated_school" class="form-control" placeholder="Last Graduated School">
+                            </div>
+                            <div class="input-group" style="margin-bottom: 10px">
+                                <span class="input-group-addon"><i class="fa fa-envelope-o"></i></span>
+                                <input type="text" name="eklemail" id="eklemail" class="form-control" placeholder="Email">
+                            </div>
+                            <div class="input-group" style="margin-bottom: 10px">
+                                <span class="input-group-addon"><i class="fa fa-mobile-phone"></i></span>
+                                <input type="text" name="eklemobile_phone" id="eklemobile_phone" class="form-control" placeholder="Mobile Phone">
+                            </div>
+                            <div class="input-group" style="margin-bottom: 10px">
+                                <span class="input-group-addon"><i class="fa fa-phone"></i></span>
+                                <input type="text" name="eklehome_phone" id="eklehome_phone" class="form-control" placeholder="Home Phone">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="input-group" style="margin-bottom: 10px">
+                                <span class="input-group-addon"><i class="fa fa-address-book"></i></span>
+                                <input type="text" name="eklehome_address" id="eklehome_address" class="form-control" placeholder="Home Adress">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 sonuce">
+
+                    </div>
+                    <br />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="btnEkle">Staff Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="mdl-guncelle">
+    <div class="modal-dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title"><span id="txtid"></span> with number Staff Updating</h4>
+                </div>
+                <form id="StaffUpdate">
+                    <div class="modal-body">
+                        @Html.AntiForgeryToken()
+
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="input-group" style="margin-bottom: 10px">
+                                    <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                    <input type="text" name="gncname_surname" id="gncname_surname" class="form-control" placeholder="Name & Surname">
+                                </div>
+                                <div class="input-group" style="margin-bottom: 10px">
+                                    <span class="input-group-addon"><i class="fa fa-globe"></i></span>
+                                    <input type="text" name="gncnationality" id="gncnationality" class="form-control" placeholder="Nationality">
+                                </div>
+                                <div class="input-group" style="margin-bottom: 10px">
+                                    <span class="input-group-addon"><i class="fa fa-id-card-o"></i></span>
+                                    <input type="text" name="gncidentity_number" id="gncidentity_number" class="form-control" placeholder="Identity Number">
+                                </div>
+                                <div class="input-group" style="margin-bottom: 10px">
+                                    <span class="input-group-addon"><i class="fa fa-user-secret"></i></span>
+                                    @Html.DropDownList("gncdepartment_id", (IEnumerable<SelectListItem>)ViewData["Departments"], "Select Department;", new { @class = "form-control" })
+                                </div>
+                                <div class="input-group" style="margin-bottom: 10px">
+                                    <span class="input-group-addon"><i class="fa fa-tasks"></i></span>
+                                    <input type="text" name="gncmission" id="gncmission" class="form-control" placeholder="Mission">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <input accept="image/jpeg" type="file" name="gncimage_path" id="gncimage_path" onchange="openFileUpdate(event)" class="form-control">
+                                <img src="Contents/Img/select-image.jpg" for="gncimage_path" id="outputUpdate" style="cursor: pointer; margin-top: 10px; height: 167px; width: 100%; border: 1px solid #d2d6de;">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="input-group" style="margin-bottom: 10px">
+                                    <span class="input-group-addon"><i class="fa fa-globe"></i></span>
+                                    @Html.DropDownList("gnccountry_id", (IEnumerable<SelectListItem>)ViewData["Countryies"], "Select Country;", new { @class = "form-control" })
+                                </div>
+                                <div class="input-group" style="margin-bottom:10px">
+                                    <span class="input-group-addon"><i class="fa fa-building"></i></span>
+                                    <select id="gnccity_id" name="gnccity_id" class="form-control">
+                                        <option value="">Please Select Country</option>
+                                    </select>
+                                </div>
+                                <div class="input-group" style="margin-bottom: 10px">
+                                    <span class="input-group-addon"><i class="fa fa-heart"></i></span>
+                                    <select class="form-control" name="gncgender" id="gncgender">
+                                        <option value="">Select Gender;</option>
+                                        <option value="true">Men</option>
+                                        <option value="false">Women</option>
+                                    </select>
+                                </div>
+                                <div class="input-group" style="margin-bottom: 10px">
+                                    <span class="input-group-addon"><i class="fa fa-birthday-cake"></i></span>
+                                    <input type="date" name="gncbirth_date" id="gncbirth_date" class="form-control" placeholder="Birth Date">
+                                </div>
+                                <div class="input-group" style="margin-bottom: 10px">
+                                    <span class="input-group-addon"><i class="fa fa-map-marker"></i></span>
+                                    <input type="text" name="gncbirth_place" id="gncbirth_place" class="form-control" placeholder="Birth Place">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="input-group" style="margin-bottom: 10px">
+                                    <span class="input-group-addon"><i class="fa fa-tint"></i></span>
+                                    <input type="text" name="gncblood_type" id="gncblood_type" class="form-control" placeholder="Blood Type">
+                                </div>
+                                <div class="input-group" style="margin-bottom: 10px">
+                                    <span class="input-group-addon"><i class="fa fa-graduation-cap"></i></span>
+                                    <input type="text" name="gnclast_graduated_school" id="gnclast_graduated_school" class="form-control" placeholder="Last Graduated School">
+                                </div>
+                                <div class="input-group" style="margin-bottom: 10px">
+                                    <span class="input-group-addon"><i class="fa fa-envelope-o"></i></span>
+                                    <input type="text" name="gncemail" id="gncemail" class="form-control" placeholder="Email">
+                                </div>
+                                <div class="input-group" style="margin-bottom: 10px">
+                                    <span class="input-group-addon"><i class="fa fa-mobile-phone"></i></span>
+                                    <input type="text" name="gncemobile_phone" id="gncemobile_phone" class="form-control" placeholder="Mobile Phone">
+                                </div>
+                                <div class="input-group" style="margin-bottom: 10px">
+                                    <span class="input-group-addon"><i class="fa fa-phone"></i></span>
+                                    <input type="text" name="gncehome_phone" id="gncehome_phone" class="form-control" placeholder="Home Phone">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="input-group" style="margin-bottom: 10px">
+                                    <span class="input-group-addon"><i class="fa fa-address-book"></i></span>
+                                    <input type="text" name="gncehome_address" id="gncehome_address" class="form-control" placeholder="Home Adress">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 sonucg">
+
+                        </div>
+                        <br />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="btnGuncelle">Staff Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Footer
+{
+    <script src="~/Contents/Js/jquery.dataTables.min.js"></script>
+    <script src="~/Contents/Js/dataTables.bootstrap.min.js"></script>
+    <script src="~/Contents/Js/jquery.slimscroll.min.js"></script>
+    <script src="~/Contents/Js/fastclick.js"></script>
+    <script src="~/Contents/Js/jquery.validate.min.js"></script>
+    <script>
+        var openFileInsert = function (file) {
+            var input = file.target;
+            var output = document.getElementById('outputInsert');
+
+            output.src = "Contents/Img/select-image.jpg";
+
+            var reader = new FileReader();
+            reader.onload = function () {
+                var dataURL = reader.result;
+                output.src = dataURL;
+            };
+            reader.readAsDataURL(input.files[0]);
+        };
+
+        var openFileUpdate = function (file) {
+            var input = file.target;
+            var output = document.getElementById('outputUpdate');
+
+            output.src = "Contents/Img/select-image.jpg";
+
+            var reader = new FileReader();
+            reader.onload = function () {
+                var dataURL = reader.result;
+                output.src = dataURL;
+            };
+            reader.readAsDataURL(input.files[0]);
+        };
+
+        function SearchTable() {
+            $("#searchBTN").html('<span style="cursor: pointer"  id="StaffSearchBtn"><i class="fa fa-spin fa-spinner"></i></span>');
+            $("#StaffSearchInput").attr("disabled", "disabled");
+
+            $.ajax({
+                type: 'POST',
+                url: 'staff-with-text',
+                contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                dataType: 'JSON',
+                data: {
+                    __RequestVerificationToken: $("#StaffSearch").find('input[name="__RequestVerificationToken"]').val(),
+                    searchText: $("#StaffSearchInput").val()
+                },
+                success: function (states) {
+                    if (states != 0) {
+                        if (states.length != 0) {
+                            var htmlTable = "";
+                            $.each(states, function (i, state) {
+                                htmlTable += `
+                                        <tr>
+                                            <td>${state.id}</td>
+                                            <td>${state.name_surname}</td>
+                                            <td>${state.country.country_name}</td>
+                                            <td>${state.city.city_name}</td>
+                                            <td>${state.department.department_name}</td>
+                                            <td>${state.mission}</td>
+                                            <td>
+                                                <button class="btn btn-default" data-toggle="modal" data-target="#mdl-guncelle" data-birth_dateStamp="${state.birthDateTimestamp}" data-name_surname="${state.name_surname}" data-nationality="${state.nationality}" data-identity_number="${state.identity_number}" data-department_id="${state.department_id}" data-mission="${state.mission}" data-country_id="${state.country_id}" data-city_id="${state.city_id}" data-last_graduated_school="${state.last_graduated_school}" data-mobile_phone="${state.mobile_phone}" data-email="${state.email}" data-birth_place="${state.birth_place}" data-home_phone="${state.home_phone}" data-gender="${state.gender}" data-home_address="${state.home_address}" data-blood_type="${state.blood_type}" data-id="${state.id}" data-image_path="${state.image_path}"><i class="fa fa-edit"></i> Edit</button>
+                                                <button class="btn btn-default" data-toggle="modal" data-target="#mdl-sil" data-id="${state.id}" data-staff_name="${state.name_surname}"><i class="fa fa-close"></i> Delete</button>
+                                            </td>
+                                        </tr>`;
+                            });
+
+                            $("#staffTable").html(htmlTable);
+                        }
+                        else {
+                            $("#staffTable").html("<tr><td colspan='7'>Not Found!</td></tr>");
+                        }
+                        $("#searchBTN").html('<span style="cursor: pointer"  id="StaffSearchBtn"><i class="fa fa-search"></i></span>');
+                        $("#StaffSearchInput").removeAttr("disabled");
+                        $("#StaffSearchBtn").click(function () {
+                            SearchTable();
+                        });
+                    }
+                    else {
+                        $("#staffTable").html("<tr><td colspan='7'>Not Found!</td></tr>");
+                        $("#searchBTN").html('<span style="cursor: pointer"  id="StaffSearchBtn"><i class="fa fa-search"></i></span>');
+                        $("#StaffSearchInput").removeAttr("disabled");
+                        $("#StaffSearchBtn").click(function () {
+                            SearchTable();
+                        });
+                    }
+                },
+                error: function (ex) {
+                    $("#staffTable").html("<tr><td colspan='7'>Error!</td></tr>");
+                    $("#searchBTN").html('<span style="cursor: pointer"  id="StaffSearchBtn"><i class="fa fa-search"></i></span>');
+                    $("#StaffSearchInput").removeAttr("disabled");
+                    $("#StaffSearchBtn").click(function () {
+                        SearchTable();
+                    });
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            $("#StaffSearchInput").keyup(function (e) {
+                if (e.key === "Enter") {
+                    SearchTable();
+                }
+            });
+
+            $("#StaffSearchBtn").click(function () {
+                SearchTable();
+            });
+
+            $('#mdl-guncelle').on('show.bs.modal', function (e) {
+                $(".sonucg").html(null);
+                var button = $(e.relatedTarget);
+                var idg = button.data('id');
+                var modal = $(this);
+
+                var imgSrc = button.data('image_path');
+
+                if (imgSrc != null && imgSrc.length > 0) {
+                    $("#outputUpdate")[0].src = "Contents/StaffImage/" + imgSrc;
+                }
+
+                modal.find('#txtid').text(idg);
+
+                modal.find('#gncname_surname').val(button.data('name_surname'));
+                modal.find('#gncnationality').val(button.data('nationality'));
+                modal.find('#gncidentity_number').val(button.data('identity_number'));
+                modal.find('#gncdepartment_id').val(button.data('department_id'));
+                modal.find('#gncmission').val(button.data('mission'));
+                modal.find('#gnccountry_id').val(button.data('country_id'));
+
+                var countryId = button.data('country_id');
+
+                if (countryId != null) {
+                    $("#gnccity_id").empty();
+                    $.ajax({
+                        type: 'POST',
+                        url: 'take-city',
+                        contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                        dataType: 'JSON',
+                        data: {
+                            __RequestVerificationToken: $("#StaffUpdate").find('input[name="__RequestVerificationToken"]').val(),
+                            id: countryId
+                        },
+                        success: function (states) {
+                            if (states != 0) {
+                                $.each(states, function (i, state) {
+                                    $("#gnccity_id").append('<option value="' + state.Value + '">' +
+                                        state.Text + '</option>');
+                                });
+
+                                modal.find('#gnccity_id').val(button.data('city_id'));
+                            }
+                        },
+                        error: function (ex) {
+                            $("#gnccity_id").append('<option value="">Error!</option>');
+                        }
+                    });
+                }
+
+                modal.find('#gnclast_graduated_school').val(button.data('last_graduated_school'));
+                modal.find('#gncemobile_phone').val(button.data('mobile_phone'));
+                modal.find('#gncemail').val(button.data('email'));
+                modal.find('#gncbirth_place').val(button.data('birth_place'));
+                modal.find('#gncehome_phone').val(button.data('home_phone'));
+
+                if (button.data('gender') != null) {
+                    if (button.data('gender') == "True") {
+                        $('#gncgender>option:eq(1)').attr('selected', true);
+                    }
+                    else if (button.data('gender') == "False") {
+                        $('#gncgender>option:eq(2)').attr('selected', true);
+                    }
+                    else {
+                        $('#gncgender>option:eq(2)').attr('selected', true);
+                    }
+                }
+
+                if (button.data('birth_datestamp') != null) {
+                    var dateBirth = new Date(button.data('birth_datestamp')).toISOString().substring(0, 10);
+                    modal.find('#gncbirth_date').val(dateBirth);
+                }
+
+                modal.find('#gncehome_address').val(button.data('home_address'));
+                modal.find('#gncblood_type').val(button.data('blood_type'));
+
+            });
+            $("#mdl-guncelle").on("hide.bs.modal", function () {
+                $(".sonucg").html(null);
+            });
+
+            $(function () {
+                $('#StaffList').DataTable({ "order": [[0, "desc"]], "searching": false });
+            });
+
+            $("#outputInsert").click(function () {
+                $("#eklimage_path").trigger("click");
+            });
+
+            $("#outputUpdate").click(function () {
+                $("#gncimage_path").trigger("click");
+            });
+            $("#eklcountry_id").change(function () {
+                $("#eklcity_id").empty();
+                if ($("#eklcountry_id option:selected").text() != "Select Country;")
+                {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'take-city',
+                        contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                        dataType: 'JSON',
+                        data: {
+                            __RequestVerificationToken: $("#StaffDelete").find('input[name="__RequestVerificationToken"]').val(),
+                            id: $("#eklcountry_id").val()
+                        },
+                        success: function (states) {
+                            if(states!=0)
+                            {
+                                $.each(states, function (i, state) {
+                                    $("#eklcity_id").append('<option value="' + state.Value + '">' +
+                                     state.Text + '</option>');
+                                });
+                            }
+                        },
+                        error: function (ex) {
+                            $("#eklcity_id").append('<option value="">Error!</option>');
+                        }
+                    });
+                }
+                return false;
+            });
+
+            $("#gnccountry_id").change(function () {
+                $("#gnccity_id").empty();
+                if ($("#gnccountry_id option:selected").text() != "Select Country;") {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'take-city',
+                        contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                        dataType: 'JSON',
+                        data: {
+                            __RequestVerificationToken: $("#StaffUpdate").find('input[name="__RequestVerificationToken"]').val(),
+                            id: $("#gnccountry_id").val()
+                        },
+                        success: function (states) {
+                            if (states != 0) {
+                                $.each(states, function (i, state) {
+                                    $("#gnccity_id").append('<option value="' + state.Value + '">' +
+                                        state.Text + '</option>');
+                                });
+                            }
+                        },
+                        error: function (ex) {
+                            $("#gnccity_id").append('<option value="">Error!</option>');
+                        }
+                    });
+                }
+                return false;
+            });
+
+            $('#mdl-ekle').on('show.bs.modal', function (e) {
+                $(".sonuce").html(null);
+                $('#StaffAdd')[0].reset();
+                var output = document.getElementById('outputInsert');
+                output.src = "Contents/Img/select-image.jpg";
+            });
+
+            $('#mdl-guncelle').on('show.bs.modal', function (e) {
+                $(".sonucg").html(null);
+            });
+
+            $('#mdl-sil').on('show.bs.modal', function (e) {
+                $(".sonucs").html(null);
+
+                var button = $(e.relatedTarget);
+                var ids = button.data('id');
+                var adis = button.data('staff_name');
+
+                var modal = $(this);
+                modal.find('#silId').text(ids);
+                modal.find('#staffName').val(adis);
+            });
+
+            $("#btnSil").click(function () {
+                $("#btnSil").attr("disabled", "disabled");
+                $("#btnSil").addClass("disabled");
+                $(".sonucs").html("<i class='fa fa-spinner fa-spin'></i> Deleting");
+                $.ajax({
+                    url: "staff-delete",
+                    type: "POST",
+                    data: {
+                        __RequestVerificationToken: $("#StaffDelete").find('input[name="__RequestVerificationToken"]').val(),
+                        StaffId: $('#silId').text()
+                    },
+                    contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                    dataType: "JSON",
+                    success: function (success) {
+                        if (success == 1) {
+                            $(".sonucs").html("<i class='fa fa-check'></i> " + $('#silId').text() + " Number Record Deleted");
+                            setTimeout(function () { location.reload() }, 1000);
+                        }
+                        else if (success == 2) {
+                            $(".sonucs").html("<i class='fa fa-close'></i> " + $('#silId').text() + " Number Record Not Found");
+                        }
+                        else if (success == 3) {
+                            $(".sonucs").html("<i class='fa fa-thumbs-down'></i> " + $('#silId').text() + " Not Number!");
+                        }
+                        else {
+                            $(".sonucs").html("<i class='fa fa-close'></i> Error!");
+                        }
+                        $("#btnSil").removeAttr("disabled");
+                        $("#btnSil").removeClass("disabled");
+                    },
+                    error: function (error) {
+                        $("#btnSil").removeAttr("disabled");
+                        $("#btnSil").removeClass("disabled");
+                        $(".sonucs").html("Error!");
+                    }
+                });
+            });
+
+            $("#StaffAdd").validate({
+                rules: {
+                    eklname_surname: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 150
+                    },
+                    eklnationality: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 150
+                    },
+                    eklidentity_number: {
+                        required: true,
+                        minlength: 10,
+                        maxlength: 11
+                    },
+                    ekldepartment_id: {
+                        required: true
+                    },
+                    eklmission: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 150
+                    },
+                    eklcountry_id: {
+                        required: true
+                    },
+                    eklbirth_place: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 150
+                    },
+                    ekllast_graduated_school: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 150
+                    },
+                    eklemobile_phone: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 100
+                    },
+                    eklehome_phone: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 100
+                    },
+                    eklehome_address: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 500
+                    },
+                    eklemail: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 150
+                    },
+                    eklbirth_date: {
+                        required: true
+                    },
+                },
+                messages: {
+                    eklname_surname: {
+                        required: "Name & Surname Field is required",
+                        minlength: "Minimum 3 Character",
+                        maxlength: "Maximum 150 Character"
+                    },
+                    eklnationality: {
+                        required: "Nationality Field is required",
+                        minlength: "Minimum 3 Character",
+                        maxlength: "Maximum 150 Character"
+                    },
+                    eklidentity_number: {
+                        required: "Identity Number Field is required",
+                        minlength: "Minimum 10 Character",
+                        maxlength: "Maximum 11 Character"
+                    },
+                    ekldepartment_id: {
+                        required: "Department"
+                    },
+                    eklmission: {
+                        required: "Mission is required",
+                        minlength: "Minimum 3 Character",
+                        maxlength: "Maximum 150 Character"
+                    },
+                    eklcountry_id: {
+                        required: "Country Field is required"
+                    },
+                    eklbirth_place: {
+                        required: "Birth Place Field is required",
+                        minlength: "Minimum 3 Character",
+                        maxlength: "Maximum 150 Character"
+                    },
+                    ekllast_graduated_school: {
+                        required: "Last Graduated School Field is required",
+                        minlength: "Minimum 3 Character",
+                        maxlength: "Maximum 150 Character"
+                    },
+                    eklemobile_phone: {
+                        required: "Mobile Phone Field is required",
+                        minlength: "Minimum 3 Character",
+                        maxlength: "Maximum 100 Character"
+                    },
+                    eklehome_phone: {
+                        required: "Home Phone Field is required",
+                        minlength: "Minimum 3 Character",
+                        maxlength: "Maximum 100 Character"
+                    },
+                    eklehome_address: {
+                        required: "Home Adress Field is required",
+                        minlength: "Minimum 3 Character",
+                        maxlength: "Maximum 500 Character"
+                    },
+                    eklemail: {
+                        required: "Email Field is required",
+                        minlength: "Minimum 3 Character",
+                        maxlength: "Maximum 150 Character"
+                    },
+                    eklbirth_date: {
+                        required: "Birth Date Field is required"
+                    }
+                },
+                errorElement: "label",
+                errorPlacement: function (error, element) {
+                    if (element.parent('.input-group').length) {
+                        error.insertAfter(element.parent());
+                    }
+                    else {
+                        error.insertAfter(element);
+                    }
+                },
+                submitHandler: function () {
+                    $("#btnEkle").attr("disabled", "disabled");
+                    $("#btnEkle").addClass("disabled");
+                    $(".sonuce").html("<i class='fa fa-spinner fa-spin'></i> Adding");
+
+                    var formData = new FormData();
+
+                    formData.append('__RequestVerificationToken', $("#StaffAdd").find('input[name="__RequestVerificationToken"]').val());
+                    formData.append('image_path', $('#eklimage_path')[0].files[0]);
+
+                    var jsonData = {
+                        name_surname: $("#eklname_surname").val(),
+                        nationality: $("#eklnationality").val(),
+                        identity_number: $("#eklidentity_number").val(),
+                        department_id: $("#ekldepartment_id option:selected").val(),
+                        mission: $("#eklmission").val(),
+                        country_id: $("#eklcountry_id option:selected").val(),
+                        city_id: $("#eklcity_id option:selected").val(),
+                        last_graduated_school: $("#ekllast_graduated_school").val(),
+                        mobile_phone: $("#eklemobile_phone").val(),
+                        email: $("#eklemail").val(),
+                        birth_place: $("#eklbirth_place").val(),
+                        home_phone: $("#eklehome_phone").val(),
+                        gender: $("#eklgender option:selected").val(),
+                        birth_dateTimeStamp: new Date($("#eklbirth_date").val()).getTime(),
+                        home_address: $("#eklehome_address").val(),
+                        blood_type: $("#eklblood_type").val(),
+                        operationName: "INSERT"
+                    };
+
+                    formData.append('frmData', JSON.stringify(jsonData));
+
+                    $.ajax({
+                        url: "staff-operation",
+                        type: "POST",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function (success) {
+                            if (success == 1) {
+                                $(".sonuce").html("<i class='fa fa-check'></i> Staff Added Successfull");
+                                setTimeout(function () { location.reload() }, 1000);
+                            }
+                            else if (success == 2) {
+                                $(".sonuce").html("Only JPG Extension is Acceptable!");
+                            }
+                            else if (success == 4) {
+                                $(".sonuce").html("Mobile Phone Number Must Start With 05!");
+                            }
+                            else if (success == 5) {
+                                $(".sonuce").html("Home Phone Number Must Start With 05!");
+                            }
+                            else if (success == 6) {
+                                $(".sonuce").html("Registration With " + $("#eklidentity_number").val() + " Identity Number Already Exists!");
+                            }
+                            else {
+                                $(".sonuce").html("<i class='fa fa-close'></i> Error!");
+                            }
+                            $("#btnEkle").removeAttr("disabled");
+                            $("#btnEkle").removeClass("disabled");
+                        },
+                        error: function (error) {
+                            $("#btnEkle").removeAttr("disabled");
+                            $("#btnEkle").removeClass("disabled");
+                            $(".sonuce").html("Error!");
+                        }
+                    });
+                }
+            });
+
+            $("#StaffUpdate").validate({
+                rules: {
+                    gncname_surname: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 150
+                    },
+                    gncnationality: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 150
+                    },
+                    gncidentity_number: {
+                        required: true,
+                        minlength: 10,
+                        maxlength: 11
+                    },
+                    gncdepartment_id: {
+                        required: true
+                    },
+                    gncmission: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 150
+                    },
+                    gnccountry_id: {
+                        required: true
+                    },
+                    gncbirth_place: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 150
+                    },
+                    gnclast_graduated_school: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 150
+                    },
+                    gncemobile_phone: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 100
+                    },
+                    gncehome_phone: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 100
+                    },
+                    gncehome_address: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 500
+                    },
+                    gncemail: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 150
+                    },
+                    gncbirth_date: {
+                        required: true
+                    },
+                },
+                messages: {
+                    gncname_surname: {
+                        required: "Name & Surname Field is required",
+                        minlength: "Minimum 3 Character",
+                        maxlength: "Maximum 150 Character"
+                    },
+                    gncnationality: {
+                        required: "Nationality Field is required",
+                        minlength: "Minimum 3 Character",
+                        maxlength: "Maximum 150 Character"
+                    },
+                    gncidentity_number: {
+                        required: "Identity Number Field is required",
+                        minlength: "Minimum 10 Character",
+                        maxlength: "Maximum 11 Character"
+                    },
+                    gncdepartment_id: {
+                        required: "Department"
+                    },
+                    gncmission: {
+                        required: "Mission is required",
+                        minlength: "Minimum 3 Character",
+                        maxlength: "Maximum 150 Character"
+                    },
+                    gnccountry_id: {
+                        required: "Country Field is required"
+                    },
+                    gncbirth_place: {
+                        required: "Birth Place Field is required",
+                        minlength: "Minimum 3 Character",
+                        maxlength: "Maximum 150 Character"
+                    },
+                    gnclast_graduated_school: {
+                        required: "Last Graduated School Field is required",
+                        minlength: "Minimum 3 Character",
+                        maxlength: "Maximum 150 Character"
+                    },
+                    gncemobile_phone: {
+                        required: "Mobile Phone Field is required",
+                        minlength: "Minimum 3 Character",
+                        maxlength: "Maximum 100 Character"
+                    },
+                    gncehome_phone: {
+                        required: "Home Phone Field is required",
+                        minlength: "Minimum 3 Character",
+                        maxlength: "Maximum 100 Character"
+                    },
+                    gncehome_address: {
+                        required: "Home Adress Field is required",
+                        minlength: "Minimum 3 Character",
+                        maxlength: "Maximum 500 Character"
+                    },
+                    gncemail: {
+                        required: "Email Field is required",
+                        minlength: "Minimum 3 Character",
+                        maxlength: "Maximum 150 Character"
+                    },
+                    gncbirth_date: {
+                        required: "Birth Date Field is required"
+                    }
+                },
+                errorElement: "label",
+                errorPlacement: function (error, element) {
+                    if (element.parent('.input-group').length) {
+                        error.insertAfter(element.parent());
+                    }
+                    else {
+                        error.insertAfter(element);
+                    }
+                },
+                submitHandler: function () {
+                    $("#btnGuncelle").attr("disabled", "disabled");
+                    $("#btnGuncelle").addClass("disabled");
+                    $(".sonucg").html("<i class='fa fa-spinner fa-spin'></i> Updating");
+
+                    var formData = new FormData();
+
+                    formData.append('__RequestVerificationToken', $("#StaffAdd").find('input[name="__RequestVerificationToken"]').val());
+                    formData.append('image_path', $('#gncimage_path')[0].files[0]);
+
+                    var jsonData = {
+                        staffId: $('#txtid').text(),
+                        name_surname: $("#gncname_surname").val(),
+                        nationality: $("#gncnationality").val(),
+                        identity_number: $("#gncidentity_number").val(),
+                        department_id: $("#gncdepartment_id option:selected").val(),
+                        mission: $("#gncmission").val(),
+                        country_id: $("#gnccountry_id option:selected").val(),
+                        city_id: $("#gnccity_id option:selected").val(),
+                        last_graduated_school: $("#gnclast_graduated_school").val(),
+                        mobile_phone: $("#gncemobile_phone").val(),
+                        email: $("#gncemail").val(),
+                        birth_place: $("#gncbirth_place").val(),
+                        home_phone: $("#gncehome_phone").val(),
+                        gender: $("#gncgender option:selected").val(),
+                        birth_dateTimeStamp: new Date($("#gncbirth_date").val()).getTime(),
+                        home_address: $("#gncehome_address").val(),
+                        blood_type: $("#gncblood_type").val(),
+                        operationName: "UPDATE"
+                    };
+
+                    formData.append('frmData', JSON.stringify(jsonData));
+
+                    $.ajax({
+                        url: "staff-operation",
+                        type: "POST",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function (success) {
+                            if (success == 1) {
+                                $(".sonucg").html("<i class='fa fa-check'></i> Staff Updated Successfull");
+                                setTimeout(function () { location.reload() }, 1000);
+                            }
+                            else if (success == 2) {
+                                $(".sonucg").html("Only JPG Extension is Acceptable!");
+                            }
+                            else if (success == 3) {
+                                $(".sonucg").html($('#txtid').text() + " Number record not found!");
+                            }
+                            else if (success == 4) {
+                                $(".sonucg").html("Mobile Phone Number Must Start With 05!");
+                            }
+                            else if (success == 5) {
+                                $(".sonucg").html("Home Phone Number Must Start With 05!");
+                            }
+                            else if (success == 6) {
+                                $(".sonucg").html("Registration With " + $("#gncidentity_number").val() + " Identity Number Already Exists!");
+                            }
+                            else {
+                                $(".sonucg").html("<i class='fa fa-close'></i> Error!");
+                            }
+                            $("#btnGuncelle").removeAttr("disabled");
+                            $("#btnGuncelle").removeClass("disabled");
+                        },
+                        error: function (error) {
+                            $("#btnGuncelle").removeAttr("disabled");
+                            $("#btnGuncelle").removeClass("disabled");
+                            $(".sonucg").html("Error!");
+                        }
+                    });
+                }
+            });
+
+        });
+    </script>
+}

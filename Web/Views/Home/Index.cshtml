@@ -1,0 +1,122 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html class="bdy">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Login To Department</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link href="~/Contents/Css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Contents/Css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Contents/Css/AdminLTE.min.css" rel="stylesheet" />
+    <link href="~/Contents/Css/blue.css" rel="stylesheet" />
+    <script src="~/Contents/Js/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+</head>
+<body class="bdy hold-transition login-page">
+    <div class="login-box">
+        <div class="login-logo">
+            <a href="#">Department Login</a>
+        </div>
+        <div class="login-box-body">
+            <p class="login-box-msg">Username: admin / Password: 159357456</p>
+            <form id="LoginForm">
+                @Html.AntiForgeryToken()
+                <div class="form-group has-feedback">
+                    <span class="fa fa-user form-control-feedback"></span>
+                    <input type="text" class="form-control" placeholder="Username" name="User" id="User" maxlength="50">
+                </div>
+                <div class="form-group has-feedback">
+                    <span class="fa fa-lock form-control-feedback"></span>
+                    <input type="password" class="form-control" placeholder="Password" name="Pass" id="Pass" maxlength="50">
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <button id="btnGiris" type="submit" class="btn btn-primary btn-block btn-flat">Login</button>
+                    </div>
+                    <div class="col-xs-12 sonucl">
+
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+    <script src="~/Contents/Js/jquery.validate.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#LoginForm").validate({
+                rules: {
+                    User: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 50
+                    },
+                    Pass: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 50
+                    }
+                },
+                messages: {
+                    User: {
+                        required: "Username is required!",
+                        minlength: "Minimum 3 Characters!",
+                        maxlength: "Maximum 50 Characters"
+                    },
+                    Pass: {
+                        required: "Şifre Gereklidir!",
+                        minlength: "Minimum 3 Characters!",
+                        maxlength: "Maximum 50 Characters"
+                    }
+                },
+                errorElement: "label",
+                submitHandler: function () {
+                    $("#btnGiris").attr("disabled", "disabled");
+                    $("#btnGiris").addClass("disabled");
+                    $(".sonucl").html("<i class='fa fa-spinner fa-spin'></i> Logging in");
+                    $.ajax({
+                        url: "login",
+                        type: "POST",
+                        data: {
+                            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
+                            User: $("#User").val(),
+                            Pass: $("#Pass").val()
+                        },
+                        contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                        dataType: "JSON",
+                        success: function (success) {
+                            $("#LoginForm")[0].reset();
+                            $("#btnGiris").removeAttr("disabled");
+                            $("#btnGiris").removeClass("disabled");
+                            if(success)
+                            {
+                                $(".sonucl").html("<i class='fa fa-check'></i> Login Success");
+                                setTimeout(function(){ location.reload()},1000);
+                            }
+                            else
+                            {
+                                $(".sonucl").html("<i class='fa fa-close'></i> Login Failed");
+                            }
+                        },
+                        error: function (error) {
+                            $("#LoginForm")[0].reset();
+                            $("#btnGiris").removeAttr("disabled");
+                            $("#btnGiris").removeClass("disabled");
+                            $(".sonucl").html("Error, Please Contact to IT.");
+                        }
+                    });
+
+                }
+            });
+        });
+    </script>
+</body>
+</html>
